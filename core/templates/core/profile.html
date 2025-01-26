@@ -1,0 +1,43 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block title %}Django{% endblock %}
+
+{% block content %}
+<div class="flex h-full w-full">
+    {% include 'core/components/nav.html' %} 
+
+    <div class="flex w-full flex-col">
+        <div class="flex w-full flex-col">
+            <div class="border-fill-stroke flex h-[50px] w-full items-center justify-between border-b px-[12px]">
+                <div>
+                    <span class="pr-[6px]">{{ user.display_name }}</span>
+                    <span class="text-color-secondary">@{{ user.username }}</span>
+                </div>
+                <form method="POST" action="{% url 'follow_user' user.id %}">
+                    {% csrf_token %}
+                    <button type="submit" 
+                            class="rounded-[8px] px-[18px] py-[4px] 
+                                   {% if is_following %} bg-red-500 text-white {% else %} bg-fill-accent text-color-primary {% endif %}">
+                        {% if is_following %}
+                            Unfollow
+                        {% else %}
+                            Follow
+                        {% endif %}
+                    </button>
+                </form>
+                
+
+                
+            </div>
+        </div>
+
+        <div class="scrollbar-hide overflow-y-scroll">
+            {% for post in posts_self %}
+                {% include 'core/components/post.html' %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

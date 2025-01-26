@@ -1,0 +1,46 @@
+<nav class="border-fill-stroke flex h-full min-w-[320px] flex-col justify-between border-r">
+    <div class="border-fill-stroke h-[50px] border-b">
+        <div class="text-color-secondary flex h-full w-full items-center justify-between px-[12px]">
+            <span class="text-[16px]">{{ request.user.email }}</span>
+            <button class="text-[14px] text-red-500">
+                <a href="/logout">􁚠</a>
+            </button>
+        </div>
+
+        <div class="text-color-secondary text-[16px]">
+            <ul>
+                <li class="hover:bg-fill-secondary flex h-[44px] items-center">
+                    <a href="/" class="flex h-full w-full items-center">
+                        <span class="pl-[22px]">􀶺</span>
+                        <span class="px-[12px]">Home</span>
+                    </a>
+                </li>
+                <li class="hover:bg-fill-secondary flex h-[44px] items-center">
+                    <a href="/liked" class="flex h-full w-full items-center">
+                        <span class="pl-[22px]">􀊴</span>
+                        <span class="px-[12px]">Liked</span>
+                    </a>
+                </li>
+                <li class="hover:bg-fill-secondary flex h-[44px] items-center">
+                    <a href="/saved" class="flex h-full w-full items-center">
+                        <span class="pl-[22px]">􀉞</span>
+                        <span class="px-[12px]">Saved</span>
+                    </a>
+                </li>
+                <li class="hover:bg-fill-secondary flex h-[44px] items-center">
+                    <a href="/profile/{{ request.user.username }}" class="flex h-full w-full items-center">
+                        <span class="pl-[22px]">􀉭</span>
+                        <span class="px-[12px]">Profile</span>
+                    </a>
+                </li>
+                <li class="hover:bg-fill-secondary flex h-[44px] items-center">
+                    <a href="/settings" class="flex h-full w-full items-center">
+                        <span class="pl-[22px]">􀣋</span>
+                        <span class="px-[12px]">Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+    </div>
+</nav>

@@ -1,0 +1,75 @@
+{% load static %}
+
+<div class="border-fill-stroke flex w-full flex-col border-b">
+    <div class="px-[52px] py-[12px] pr-[150px]">
+        <div class="flex items-center">
+            <a href="/profile/{{post.user.username}}" class="flex cursor-pointer">
+                <img src="{% static 'core/images/avatar.png' %}" alt="Logo" class="h-[50px] w-[50px] rounded-[50%]">
+                <div class="flex flex-col px-[8px]">
+                    <span>{{ post.user.display_name }}</span>
+                    <span class="text-color-secondary">@{{ post.user.username }}</span>
+                </div>
+            </a>
+        </div>
+     
+        <div class="py-[12px]">
+            <span class="text-[18px]">{{ post.content }}</span>
+        </div>
+    </div>
+
+    <div class="text-color-secondary flex justify-between px-[52px] pb-[12px]">
+        <div class="flex items-center">
+            <form method="POST" action="{% url 'like_post' post.id %}">
+                {% csrf_token %}
+                <button type="submit" class="mr-[38px] flex items-center">
+                    <span class="
+                        {% for liked_post in liked_posts %}
+                            {% if post == liked_post %}
+                                text-red-500
+                            {% endif %}
+                        {% endfor %}
+                    ">
+                        {% if post in liked_posts %}
+                            􀊵
+                        {% else %}
+                            􀊴
+                        {% endif %}
+                    </span>
+                    <span class="pl-[6px]">
+                        {{ post.like_count }}
+                    </span>
+                </button>
+            </form>
+
+            <form method="POST" action="{% url 'save_post' post.id %}">
+                {% csrf_token %}
+                <button type="submit" class="mr-[38px] flex items-center">
+                    <span class="
+                        {% for saved_post in saved_posts %}
+                            {% if post == saved_post %}
+                                text-orange-500
+                            {% endif %}
+                        {% endfor %}
+                    ">
+                        {% if post in saved_posts %}
+                            􀉟
+                        {% else %}
+                            􀉞
+                        {% endif %}
+                    </span>
+                    <span class="pl-[6px]">
+                        {{ post.save_count }}
+                    </span>
+                </button>
+            </form>
+        </div>
+        {% if post.user == request.user %}
+            <form action="{% url 'delete_post' post.id %}" method="POST" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="text-red-500">
+                    <span>􀈑</span>
+                </button>
+            </form>
+        {% endif %}
+    </div>
+</div> 

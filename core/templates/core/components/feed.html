@@ -1,0 +1,82 @@
+<div class="flex w-full flex-col">
+    <div class="flex w-full flex-col">
+        <div class="border-fill-stroke text-color-secondary flex h-[50px] w-full border-b relative">
+            <button
+                class="tab bg hover:bg-fill-secondary text-color-primary h-full w-1/3 border-b-2 border-transparent active-tab"
+                data-tab="foryou"
+            >
+                For You
+            </button>
+            <button
+                class="tab bg hover:bg-fill-secondary text-color-primary h-full w-1/3 border-b-2 border-transparent"
+                data-tab="trending"
+            >
+                Trending
+            </button>
+            <button
+                class="tab bg hover:bg-fill-secondary text-color-primary h-full w-1/3 border-b-2 border-transparent"
+                data-tab="following"
+            >
+                Following
+            </button>
+            <div
+                id="tab-indicator"
+                class="absolute bottom-0 h-[3px] w-1/3 bg-blue-500 transition-all duration-300"
+            ></div>
+        </div>
+    </div>
+
+    <form method="POST" action="{% url 'create_post' %}">
+        {% csrf_token %}
+        <div class="border-fill-stroke flex min-h-[125px] w-full border-b">
+            <textarea
+                name="content"
+                class="min-h-[125px] w-full resize-none border-none bg-transparent"
+                placeholder="What's happening?"
+            ></textarea>
+            <button
+                type="submit"
+                class="hover:bg-fill-secondary h-[125px] w-[125px]"
+            >
+                􀈟
+            </button>
+        </div>
+    </form>
+
+    <div id="tab-content" class="scrollbar-hide overflow-y-scroll">
+        <div class="tab-content" id="foryou-tab-content">
+            {% include 'core/components/foryou.html' %}
+        </div>
+
+        <div class="tab-content hidden" id="trending-tab-content">
+            {% include 'core/components/trending.html' %}
+        </div>
+
+        <div class="tab-content hidden" id="following-tab-content">
+            {% include 'core/components/following.html' %}
+        </div>
+    </div>
+</div>
+
+<script>
+    const tabs = document.querySelectorAll('.tab');
+    const tabIndicator = document.getElementById('tab-indicator');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    document.getElementById('trending-tab-content').classList.add('hidden');
+    document.getElementById('following-tab-content').classList.add('hidden');
+    document.getElementById('foryou-tab-content').classList.remove('hidden');
+
+    tabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => {
+            document.querySelector('.active-tab').classList.remove('border-fill-accent', 'active-tab');
+            tab.classList.add('border-fill-accent', 'active-tab');
+            tabIndicator.style.transform = `translateX(${index * 100}%)`;
+
+            tabContents.forEach(content => content.classList.add('hidden'));
+
+            const tabName = tab.getAttribute('data-tab');
+            document.getElementById(`${tabName}-tab-content`).classList.remove('hidden');
+        });
+    });
+</script>

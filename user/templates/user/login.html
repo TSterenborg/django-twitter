@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <div class="flex h-full w-full flex-col items-center justify-center">
+        <div>
+            <form method="POST" action="{% url 'login' %}" class="w-[400px]">
+                {% csrf_token %}
+                <div class="flex w-full flex-col py-[6px]">
+                    <label for="id_email" class="py-[4px]">Email</label>
+                    <input type="email" name="email" placeholder="example@gmail.com" class="bg-fill-secondary border-fill-stroke h-[40px] rounded-[8px]" autofocus required>
+                </div>
+                <div class="flex w-full flex-col py-[6px]">
+                    <label for="id_password" class="py-[4px]">Password</label>
+                    <input type="password" name="password" class="bg-fill-secondary border-fill-stroke h-[40px] rounded-[8px]" required>
+                </div>
+                {% if error_message %}
+                    <div class="text-red-500">
+                        <p>{{ error_message }}</p>
+                    </div>
+                {% endif %}
+                <div class="flex w-full py-[28px]">
+                    <button type="submit" class="bg-fill-accent h-[40px] w-full cursor-pointer rounded-[8px]">Login</button>
+                </div>
+            </form>
+            <div class="text-center">
+                <span class="text-color-secondary">Don't have an account? <a href="/register" class="text-color-link">Register</a></span>
+            </div>
+        </div>   
+    </div>
+{% endblock %}

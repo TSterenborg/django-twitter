@@ -1,0 +1,71 @@
+{% extends 'core/base.html' %}
+
+
+
+{% block title %}Django{% endblock %}
+
+{% block content %}
+
+    <div class="flex h-full w-full">
+        {% include 'core/components/nav.html' %} 
+
+        
+        <div class="flex w-full flex-col">
+
+            <div class="border-fill-stroke text-color-secondary flex h-[50px] w-full border-b">
+        
+                <span class="text-[32px] font-bold px-4"> Settings 􀣋 </span> 
+        
+
+            </div>
+
+            <div class="flex h-full w-full items-stretch flex-col place-items-start ">
+
+                <form method="post" action="{% url 'settings' %}">
+
+                    {% csrf_token %}
+
+                    {% if error_message %}
+                        <div class="text-red-500">
+                            <p>{{ error_message }}</p>
+                        </div>
+                    {% endif %}
+
+                    
+                    {% if success %}
+                        <div >
+                            <label class="text-blue-700">{{ success }}</p>
+                        </div>
+                    {% endif %}
+
+                    <div class="flex w-full flex-col py-[6px]">
+                        <label for="display_name" class="py-[4px]">Display Name</label>
+                        <input name="display_name" value="{{ user.display_name }}" class="bg-fill-secondary border-fill-stroke h-[40px] rounded-[8px] w-1/3 inset-x-0"  >
+                    </div>
+
+                    <div class="flex w-full flex-col py-[6px]">
+                        <label for="email" class="py-[4px]">Email</label>
+                        <input type="email" name="email" value="{{ user.email }}" class="bg-fill-secondary border-fill-stroke h-[40px] rounded-[8px]  w-1/3 "  >
+                    </div>
+
+                    <div class="flex w-full flex-col py-[6px]">
+                        <label for="password1" class="py-[4px]">New Password</label>
+                        <input type="password" name="password1" placeholder="" class="bg-fill-secondary border-fill-stroke h-[40px] rounded-[8px]  w-1/3 ">
+                    </div>
+
+                    <div class="flex w-full flex-col py-[6px]">
+                        <label for="password2" class="py-[4px]">Retype Password</label>
+                        <input type="password" name="password2" placeholder="" class="bg-fill-secondary border-fill-stroke h-[40px] rounded-[8px]  w-1/3 ">
+                    </div>
+                    
+                    <button type="submit" class="text-[16px] scale-1 py-3.5 px-5 text-blue-00 transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-2 hover:scale-110 hover:bg-indigo-500 duration-200 border-fill-accent rounded-md ">  save </button> 
+            
+                </form>
+            </div>  
+        </div>
+    </div>
+
+    
+
+    
+{% endblock %}

@@ -1,0 +1,183 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+    <div class="flex h-full w-full flex-col items-center justify-center">
+        <div>
+            <form method="POST" id="registerForm" class="w-[400px]">
+                {% csrf_token %}
+                
+                <div class="flex w-full flex-col py-[6px]">
+                    <label for="id_display_name" class="py-[4px]">Display name</label>
+                    {{ form.display_name }}
+                    {% if form.display_name.errors %}
+                        <div class="text-red-500">
+                            {% for error in form.display_name.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="flex w-full flex-col py-[6px]">
+                    <label for="id_username" class="py-[4px]">Username</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        <div class="text-red-500">
+                            {% for error in form.username.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="flex w-full flex-col py-[6px]">
+                    <label for="id_email" class="py-[4px]">Email</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="text-red-500">
+                            {% for error in form.email.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="flex w-full flex-col py-[6px]">
+                    <label for="id_password1" class="py-[4px]">Password</label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}
+                        <div class="text-red-500">
+                            {% for error in form.password1.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="flex w-full flex-col py-[6px]">
+                    <label for="id_password2" class="py-[4px]">Password Confirm</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                        <div class="text-red-500">
+                            {% for error in form.password2.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="flex w-full py-[28px]">
+                    <button type="submit" class="bg-fill-accent h-[40px] w-full cursor-pointer rounded-[8px]">Register</button>
+                </div>
+                
+            </form>
+            <div class="text-center">
+                <span class="text-color-secondary">Already have a account? <a href="/login" class="text-color-link">Login</a></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('registerForm');
+        const usernameInput = document.querySelector('input[name="username"]');
+        const emailInput = document.querySelector('input[name="email"]');
+        const password1Input = document.querySelector('input[name="password1"]');
+        const password2Input = document.querySelector('input[name="password2"]');
+        const usernameError = document.getElementById('username-error');
+        const usernameExistsError = document.getElementById('username-exists-error');
+        const emailError = document.getElementById('email-error');
+        const emailInvalidError = document.getElementById('email-invalid-error');
+        const passwordError = document.getElementById('password-error');
+        const passwordMatchError = document.getElementById('password-match-error');
+
+        const commonPasswords = ['123456', 'password', '123456789', 'qwerty', 'abc123', 'password1', '12345', '1234'];
+
+        form.addEventListener('submit', function(event) {
+            let valid = true;
+
+            if (!/^\w+$/.test(usernameInput.value)) {
+                usernameError.classList.remove('hidden');
+                usernameExistsError.classList.add('hidden');
+                valid = false;
+            } else {
+                usernameError.classList.add('hidden');
+                fetch(`/check-username/${usernameInput.value}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exists) {
+                            usernameExistsError.classList.remove('hidden');
+                            valid = false;
+                        } else {
+                            usernameExistsError.classList.add('hidden');
+                        }
+                    });
+            }
+
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(emailInput.value)) {
+                emailInvalidError.classList.remove('hidden');
+                emailError.classList.add('hidden');
+                valid = false;
+            } else {
+                emailInvalidError.classList.add('hidden');
+                fetch(`/check-email/${emailInput.value}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exists) {
+                            emailError.classList.remove('hidden');
+                            valid = false;
+                        } else {
+                            emailError.classList.add('hidden');
+                        }
+                    });
+            }
+
+            if (password1Input.value.length < 8) {
+                passwordError.innerHTML = "Het wachtwoord moet minstens 8 tekens bevatten.";
+                passwordError.classList.remove('hidden');
+                valid = false;
+            } else if (commonPasswords.includes(password1Input.value)) {
+                passwordError.innerHTML = "Het wachtwoord mag geen veelgebruikt wachtwoord zijn.";
+                passwordError.classList.remove('hidden');
+                valid = false;
+            } else if (/^\d+$/.test(password1Input.value)) {
+                passwordError.innerHTML = "Het wachtwoord mag niet volledig numeriek zijn.";
+                passwordError.classList.remove('hidden');
+                valid = false;
+            } else if (usernameInput.value.toLowerCase().includes(password1Input.value.toLowerCase()) || emailInput.value.toLowerCase().includes(password1Input.value.toLowerCase())) {
+                passwordError.innerHTML = "Het wachtwoord mag niet te veel lijken op je gebruikersnaam of email.";
+                passwordError.classList.remove('hidden');
+                valid = false;
+            } else {
+                passwordError.classList.add('hidden');
+            }
+
+            if (password1Input.value !== password2Input.value) {
+                passwordMatchError.classList.remove('hidden');
+                valid = false;
+            } else {
+                passwordMatchError.classList.add('hidden');
+            }
+
+            if (!valid) {
+                event.preventDefault();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const inputs = document.querySelectorAll('input:not([type="submit"])');
+
+            inputs.forEach(input => {
+                input.classList.add('bg-fill-secondary', 'border-fill-stroke', 'h-[40px]', 'rounded-[8px]');
+            });
+        });
+
+        document.getElementById('id_display_name').placeholder = "John Doe";
+        document.getElementById('id_display_name').focus()
+        usernameInput.placeholder = "johndoe";
+        emailInput.placeholder = "example@gmail.com";
+
+    </script>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block title %}Liked Posts{% endblock %}
+
+{% block content %}
+<div class="flex h-full w-full">
+    {% include 'core/components/nav.html' %} 
+
+    <div class="flex w-full flex-col">
+        <div class="flex w-full flex-col">
+            <div class="border-fill-stroke flex h-[50px] w-full items-center justify-between border-b px-[12px]">
+                <div>
+                    <span class="pr-[6px]">Liked</span>
+                    <span class="text-color-secondary">@{{ user.username }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="scrollbar-hide overflow-y-scroll">
+            {% if liked_posts %}
+                <div class="saved-posts-list">
+                    {% for post in liked_posts %}
+                        {% include 'core/components/post.html' %} 
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
